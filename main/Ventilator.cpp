@@ -5,5 +5,17 @@ Ventilator::Ventilator(int pin){
 }
 
 void Ventilator::run(){
+    if(this->isRunning){
+        return;
+    }
     // implement...
+    this->isRunning = true;
+}
+
+void Ventilator::stop(){
+    if(this->isRunning == false){
+        return;
+    }
+    // implement...
+    this->isRunning = false;
 }

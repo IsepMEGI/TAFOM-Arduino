@@ -9,7 +9,6 @@
 #define DHTPIN 2     // Digital pin connected to the DHT sensor
 #define DHTTYPE DHT11   // DHT 11
 
-DHT tempHumSensor(DHTPIN, DHTTYPE);
 
 #define MAX_TEMPERATURE_THRESHOLD 25
 
@@ -22,6 +21,7 @@ DHT tempHumSensor(DHTPIN, DHTTYPE);
 static int entryCounter = 0;
 static String cardInfo;
 
+DHT tempHumSensor(DHTPIN, DHTTYPE);
 RFID rfid(RFID_PIN); // talvez precise do pino de ligação
 Door door(SERVO_PIN);
 Screen screen(SCREEN_PIN); // precisa de 1 ou mais pinos?
@@ -51,8 +51,11 @@ void loop( )
   }
 
   // Handle ventilator
-  if(temperature > MAX_TEMPERATURE_THRESHOLD){
+  if(temperature >= MAX_TEMPERATURE_THRESHOLD && ventilator.isRunning == false){
     ventilator.run();
+  }
+  else if(temperature < MAX_TEMPERATURE_THRESHOLD && ventilator.isRunning){
+    ventilator.stop();
   }
 
   screen.refresh(entryCounter);

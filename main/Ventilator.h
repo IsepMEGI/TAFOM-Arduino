@@ -4,8 +4,10 @@
 class Ventilator
 {
 public:
+    bool isRunning;
     Ventilator(int pin);
     void run();
+    void stop();
 };
 
 #endif
