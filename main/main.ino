@@ -19,8 +19,6 @@ DHT tempHumSensor(DHTPIN, DHTTYPE);
 #define RFID_PIN 6
 #define VALID_CREDENTIALS String("i am a boss")
 
-DHT dht(1, DHTTYPE);
-
 static int entryCounter = 0;
 static String cardInfo;
 
