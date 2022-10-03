@@ -41,6 +41,23 @@ void loop( )
   temperature = tempHumSensor.readTemperature();
   humidity = tempHumSensor.readHumidity();
   
+  if (isnan(humidity) || isnan(temperature)) {
+    Serial.println(F("Failed to read from DHT sensor!"));
+    return;
+  }
+
+  /*Serial.print("Temperature = ");
+  Serial.print(t);
+  Serial.print(" ");
+  Serial.print((char)176);
+  Serial.print("C | ");
+  Serial.print(" ");
+  Serial.print("Humidity = ");
+  Serial.print(h);
+  Serial.println(" % ");
+  Serial.println("");*/
+
+
   // Handle door
   if(rfid.checkCard() == true){
     cardInfo = rfid.cardInfo; // assumir que cartão tem alguma informação
