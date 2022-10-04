@@ -1,8 +1,9 @@
 #include "RFID.h"
 #include "Door.h"
-#include "Screen.h"
+#include "ScreenInterface.h"
 #include "Repository.h"
 #include "Ventilator.h"
+#include "SerialInterface.h"
 
 #include "DHT.h"
 
@@ -40,23 +41,7 @@ void loop( )
 {
   temperature = tempHumSensor.readTemperature();
   humidity = tempHumSensor.readHumidity();
-  
-  if (isnan(humidity) || isnan(temperature)) {
-    Serial.println(F("Failed to read from DHT sensor!"));
-    return;
-  }
-
-  /*Serial.print("Temperature = ");
-  Serial.print(t);
-  Serial.print(" ");
-  Serial.print((char)176);
-  Serial.print("C | ");
-  Serial.print(" ");
-  Serial.print("Humidity = ");
-  Serial.print(h);
-  Serial.println(" % ");
-  Serial.println("");*/
-
+  SerialInterface::displayth(temperature, humidity);
 
   // Handle door
   if(rfid.checkCard() == true){
