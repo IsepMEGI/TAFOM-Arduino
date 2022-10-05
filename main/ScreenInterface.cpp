@@ -1,11 +1,11 @@
 #include "ScreenInterface.h"
 
-Screen::Screen(int pin){
-    // implement...
+Screen::Screen(uint8_t pin){
+    this->pin = pin;
 }
 
 /// @brief Function that refreshes the screen
 /// @param entryCounter the ammount of entries
 void Screen::display(int entryCounter){
-    // implement...
+    // TODO Implement screen display interface
 }

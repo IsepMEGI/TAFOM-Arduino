@@ -4,64 +4,109 @@
 #include "Repository.h"
 #include "Ventilator.h"
 #include "SerialInterface.h"
+#include "Environment.h"
+#include "LightInterface.h"
 
+// DHT Setup
 #include "DHT.h"
+#define DHTPIN 2      // Digital pin connected to the DHT sensor
+#define DHTTYPE DHT11 // DHT 11
 
-#define DHTPIN 2     // Digital pin connected to the DHT sensor
-#define DHTTYPE DHT11   // DHT 11
+#define DOOR_OPEN_TIME 3000 // milliseconds
 
-
-#define MAX_TEMPERATURE_THRESHOLD 25
-
-#define SERVO_PIN 3 // depois ver qual dos pinos será
+// TODO Decide pin layout
+#define SERVO_PIN 3
 #define SCREEN_PIN 4
 #define DC_MOTOR_PIN 5
 #define RFID_PIN 6
-#define VALID_CREDENTIALS String("i am a boss")
+#define LIGHT_PIN 7
+#define VALID_CREDENTIALS "password1234"
 
+// Auxiliary variables
 static int entryCounter = 0;
+static unsigned long currentTime;
 static String cardInfo;
+static EnvironmentStatus environmentStatus;
+static VentilatorSpeed ventilatorSpeed;
+static LightColor lightColor;
 
+// System objects
 DHT tempHumSensor(DHTPIN, DHTTYPE);
 RFID rfid(RFID_PIN); // talvez precise do pino de ligação
 Door door(SERVO_PIN);
 Screen screen(SCREEN_PIN); // precisa de 1 ou mais pinos?
-Repository repository; // o que é que isto precisa? serve para guardar os dados excel
+Repository repository;     // o que é que isto precisa? serve para guardar os dados excel
 Ventilator ventilator(DC_MOTOR_PIN);
+LightInterface lightInterface(LIGHT_PIN);
 
 float temperature;
 float humidity;
 
-void setup( )
+void setup()
 {
-  Serial.begin( 9600);
+  Serial.begin(9600);
 }
 
-void loop( )
+void loop()
 {
-  temperature = tempHumSensor.readTemperature();
-  humidity = tempHumSensor.readHumidity();
-  SerialInterface::displayth(temperature, humidity);
 
-  // Handle door
-  if(rfid.checkCard() == true){
+  // --- Handle door
+  if (rfid.checkCard() == true)
+  {
     cardInfo = rfid.cardInfo; // assumir que cartão tem alguma informação
-    if(cardInfo == VALID_CREDENTIALS){
+    if (cardInfo == VALID_CREDENTIALS && !door.isOpen)
+    {
       door.open();
       entryCounter++;
     }
   }
 
-  // Handle ventilator
-  if(temperature >= MAX_TEMPERATURE_THRESHOLD && ventilator.isRunning == false){
-    ventilator.run();
-  }
-  else if(temperature < MAX_TEMPERATURE_THRESHOLD && ventilator.isRunning){
-    ventilator.stop();
-  }
+  currentTime = millis();
 
-  screen.refresh(entryCounter);
-  
+  if ((door.lastOpen + DOOR_OPEN_TIME > currentTime || currentTime < door.lastOpen) && door.isOpen)
+  {
+    door.close();
+  }
+  // --- End handle door
+
+  // --- Handle sensor
+  temperature = tempHumSensor.readTemperature();
+  humidity = tempHumSensor.readHumidity();
+  // ---
+
+  // --- Handle ventilator
+  environmentStatus = Environment::evaluate(temperature, humidity);
+  switch (environmentStatus)
+  {
+  case EnvironmentStatus::CONFORMANT:
+    ventilatorSpeed = VentilatorSpeed::MINIMUM;
+    lightColor = LightColor::GREEN;
+    break;
+  case EnvironmentStatus::IRREGULAR:
+    ventilatorSpeed = VentilatorSpeed::MEDIUM;
+    lightColor = LightColor::YELLOW;
+    break;
+  case EnvironmentStatus::DANGER:
+    ventilatorSpeed = VentilatorSpeed::MAXIMUM;
+    lightColor = LightColor::RED;
+    break;
+  default:
+    ventilatorSpeed = VentilatorSpeed::MINIMUM;
+    lightColor = LightColor::GREEN;
+    break;
+  }
+  lightInterface.set(lightColor);
+  ventilator.run(ventilatorSpeed);
+  // --- End handle ventilator
+
+
+  // --- Handle interfaces
+  SerialInterface::displayth(temperature, humidity);
+  screen.display(entryCounter);
+  // ---
+
+
+  // --- Handle saving data
   repository.save(temperature, humidity);
-
+  // ---
 }

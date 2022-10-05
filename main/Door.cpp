@@ -1,9 +1,18 @@
 #include "Door.h"
 
-Door::Door(int pin){
-    // implement...
+// TODO Implement door opening and closing
+
+Door::Door(uint8_t pin)
+{
+    this->pin = pin;
 }
 
-void Door::open(){
-    // TODO implement...
+void Door::open()
+{
+    // Implement door opening method
+}
+
+void Door::close()
+{
+    // Implement door closing method
 }

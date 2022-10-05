@@ -1,21 +1,10 @@
 #include "Ventilator.h"
 
-Ventilator::Ventilator(int pin){
-    // implement...
+Ventilator::Ventilator(uint8_t pin){
+    this->pin = pin;
 }
 
-void Ventilator::run(){
-    if(this->isRunning){
-        return;
-    }
-    // implement...
-    this->isRunning = true;
-}
-
-void Ventilator::stop(){
-    if(this->isRunning == false){
-        return;
-    }
-    // implement...
-    this->isRunning = false;
+void Ventilator::run(VentilatorSpeed speed){
+    // TODO Implement ventilator run method
+    this->currentSpeed = speed;
 }

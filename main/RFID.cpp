@@ -1,10 +1,11 @@
 #include "RFID.h"
 
-RFID::RFID(int pin){
-    // implement...
+RFID::RFID(uint8_t pin){
+    this->pin = pin;
 }
 
 bool RFID::checkCard(){
-    // implement...
+    // TODO Implement rfid card checking/reading method
+    // ! remember to save the card info if there is a card present
     return false;
 }
