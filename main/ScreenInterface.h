@@ -5,7 +5,7 @@ class Screen
 {
 public:
     Screen(int pin);
-    void refresh(int entryCounter);
+    void display(int entryCounter);
 };
 
 #endif

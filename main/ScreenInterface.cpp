@@ -6,6 +6,6 @@ Screen::Screen(int pin){
 
 /// @brief Function that refreshes the screen
 /// @param entryCounter the ammount of entries
-void Screen::refresh(int entryCounter){
+void Screen::display(int entryCounter){
     // implement...
 }
