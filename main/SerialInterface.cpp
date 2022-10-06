@@ -6,8 +6,9 @@ void SerialInterface::displayth(float temperature, float humidity){
         Serial.println(F("Failed to read from DHT sensor!"));
         return;
     }
-    Serial.print(temperature);
+
     Serial.print("Temperature = ");
+    Serial.print(temperature);
     Serial.print(" ");
     Serial.print((char)176);
     Serial.print("C | ");
