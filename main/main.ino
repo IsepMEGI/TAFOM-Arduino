@@ -33,13 +33,13 @@ static LightColor lightColor;
 
 // System objects
 DHT tempHumSensor(DHTPIN, DHTTYPE);
-RFID rfid(RFID_PIN); // talvez precise do pino de ligação
+RFID rfid(RFID_PIN);
 Door door(SERVO_PIN);
 // change true to false to use Serial interface instead of Screen
 #if true
-Interface interface = ScreenInterface(16, 2); // precisa de 1 ou mais pinos?
+ScreenInterface interface(16, 2); // 16x2 Screen
 #else
-Interface interface = SerialInterface();
+SerialInterface interface();
 #endif
 Repository repository;     // o que é que isto precisa? serve para guardar os dados excel
 Ventilator ventilator(DC_MOTOR_PIN);
