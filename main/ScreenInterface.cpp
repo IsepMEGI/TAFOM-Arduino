@@ -1,16 +1,17 @@
 #include "ScreenInterface.h"
 
 
-ScreenInterface::Screen(uint8_t rows, uint8_t cols){
+ScreenInterface::ScreenInterface(uint8_t rows, uint8_t cols){
     this->rows = rows;
     this->cols = cols;
+    this->screen = NULL;
 }
 
-ScreenInterface::setup()
+void ScreenInterface::setup()
 {
     Wire.begin();
-    byte error, address;
-    Serial.println("Scanning...");
+    uint8_t error, address;
+    Serial.println("Scanning I2C devices...");
     for(address = 1; address < 127; address++ )
     {
         Wire.beginTransmission(address);
@@ -20,26 +21,27 @@ ScreenInterface::setup()
             break;
         }
     }
-    LiquidCrystal_I2C lcd(address, this->cols, this->rows);
-    lcd.begin();
-    lcd.backlight();
+    Serial.print("Found screen at address ");
+    Serial.println(address);
 
-    this->lcd = lcd;
+    this->screen = new LiquidCrystal_I2C(address, this->cols, this->rows);
+    this->screen->init();
+    this->screen->backlight();
 }
 
 void ScreenInterface::display(float temp, float hum, int entryCounter){
-    lcd.clear();
-    lcd.setCursor(0,0); 
-	lcd.print("T: ");
-    lcd.print(temp);
-	lcd.print((char)223);
-	lcd.print("C");
-    lcd.print("  ");
-    lcd.print("H:");
-    lcd.print(hum);
-    lcd.print("%");
+    screen->clear();
+    screen->setCursor(0,0); 
+	screen->print("T:");
+    screen->print(temp, 1);
+	screen->print((char)223);
+	screen->print("C");
+    screen->print(" ");
+    screen->print("H:");
+    screen->print(hum,1);
+    screen->print("%");
 
-    lcd.setCursor(0,1);
-    lcd.print("Entrys: ");
-    lcd.print(entryCounter);
+    screen->setCursor(0,1);
+    screen->print("Entries: ");
+    screen->print(entryCounter);
 }
