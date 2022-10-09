@@ -9,22 +9,7 @@ ScreenInterface::ScreenInterface(uint8_t rows, uint8_t cols){
 
 void ScreenInterface::setup()
 {
-    Wire.begin();
-    uint8_t error, address;
-    Serial.println("Scanning I2C devices...");
-    for(address = 1; address < 127; address++ )
-    {
-        Wire.beginTransmission(address);
-        error = Wire.endTransmission();
-        if (error == 0)
-        {
-            break;
-        }
-    }
-    Serial.print("Found screen at address ");
-    Serial.println(address);
-
-    this->screen = new LiquidCrystal_I2C(address, this->cols, this->rows);
+    this->screen = new LiquidCrystal_I2C(I2C_ADDRESS, this->cols, this->rows);
     this->screen->init();
     this->screen->backlight();
 }
