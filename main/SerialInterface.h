@@ -7,7 +7,8 @@
 class SerialInterface: public Interface
 {
 public:
-    static void display(float temp, float hum, int entryCounter);
+    void display(float temp, float hum, int entryCounter);
+    void setup();
 };
 
 #endif

@@ -9,6 +9,7 @@ public:
     /// @param hum humidity
     /// @param entryCounter door entry counter 
     virtual void display(float temp, float hum, int entryCounter);
+    virtual void setup();
 };
 
 #endif

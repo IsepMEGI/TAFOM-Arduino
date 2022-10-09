@@ -37,7 +37,7 @@ RFID rfid(RFID_PIN); // talvez precise do pino de ligação
 Door door(SERVO_PIN);
 // change true to false to use Serial interface instead of Screen
 #if true
-Interface interface = ScreenInterface(SCREEN_PIN); // precisa de 1 ou mais pinos?
+Interface interface = ScreenInterface(16, 2); // precisa de 1 ou mais pinos?
 #else
 Interface interface = SerialInterface();
 #endif
@@ -51,6 +51,7 @@ float humidity;
 void setup()
 {
   Serial.begin(9600);
+  interface.setup();
 }
 
 void loop()
