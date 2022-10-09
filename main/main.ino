@@ -1,6 +1,7 @@
 #include "RFID.h"
 #include "Door.h"
 #include "ScreenInterface.h"
+#include "Interface.h"
 #include "Repository.h"
 #include "Ventilator.h"
 #include "SerialInterface.h"
@@ -34,7 +35,12 @@ static LightColor lightColor;
 DHT tempHumSensor(DHTPIN, DHTTYPE);
 RFID rfid(RFID_PIN); // talvez precise do pino de ligação
 Door door(SERVO_PIN);
-Screen screen(SCREEN_PIN); // precisa de 1 ou mais pinos?
+// change true to false to use Serial interface instead of Screen
+#if true
+Interface interface = ScreenInterface(SCREEN_PIN); // precisa de 1 ou mais pinos?
+#else
+Interface interface = SerialInterface();
+#endif
 Repository repository;     // o que é que isto precisa? serve para guardar os dados excel
 Ventilator ventilator(DC_MOTOR_PIN);
 LightInterface lightInterface(LIGHT_PIN);
@@ -51,9 +57,10 @@ void loop()
 {
 
   // --- Handle door
+  // TODO change cardInfo to ID, because we just need to check for the ID and not for any other credentials
   if (rfid.checkCard() == true)
   {
-    cardInfo = rfid.cardInfo; // assumir que cartão tem alguma informação
+    cardInfo = rfid.cardInfo;
     if (cardInfo == VALID_CREDENTIALS && !door.isOpen)
     {
       door.open();
@@ -101,8 +108,7 @@ void loop()
 
 
   // --- Handle interfaces
-  SerialInterface::displayth(temperature, humidity);
-  screen.display(entryCounter);
+  interface.display(temperature, humidity, entryCounter);
   // ---
 
 

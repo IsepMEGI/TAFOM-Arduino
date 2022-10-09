@@ -1,7 +1,7 @@
 #include "SerialInterface.h"
 
 
-void SerialInterface::displayth(float temperature, float humidity){
+void SerialInterface::display(float temp, float hum, int entryCounter){
     if (isnan(humidity) || isnan(temperature)) {
         Serial.println(F("Failed to read from DHT sensor!"));
         return;

@@ -2,11 +2,12 @@
 #define SERIAL_INTERFACE_H
 
 #include <Arduino.h>
+#include "Interface.h"
 
-class SerialInterface
+class SerialInterface: public Interface
 {
 public:
-    static void displayth(float temperature, float humidity);
+    static void display(float temp, float hum, int entryCounter);
 };
 
 #endif
