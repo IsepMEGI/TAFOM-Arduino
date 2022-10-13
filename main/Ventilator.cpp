@@ -19,7 +19,6 @@ void Ventilator::setup(){
 }
 
 void Ventilator::run(VentilatorSpeed speed){
-    // TODO Implement ventilator run method
     if (speed == this->currentSpeed)
     {
         return;
