@@ -1,3 +1,4 @@
+
 #include "RFID.h"
 #include "Door.h"
 #include "ScreenInterface.h"
@@ -7,6 +8,7 @@
 #include "SerialInterface.h"
 #include "Environment.h"
 #include "LightInterface.h"
+
 
 // DHT Setup
 #include "DHT.h"
@@ -52,6 +54,7 @@ void setup()
 {
   Serial.begin(9600);
   interface.setup();
+  
 }
 
 void loop()
@@ -62,16 +65,16 @@ void loop()
   if (rfid.checkCard() == true)
   {
     cardInfo = rfid.cardInfo;
-    if (cardInfo == VALID_CREDENTIALS && !door.isOpen)
+    if (cardInfo == VALID_CREDENTIALS && !door.isOpen) // ANA credenciais validas e porta fechada, abre a porta
     {
       door.open();
-      entryCounter++;
+      entryCounter++; //ANA conta as pessoas que entram
     }
   }
 
-  currentTime = millis();
+  currentTime = millis(); 
 
-  if ((door.lastOpen + DOOR_OPEN_TIME > currentTime || currentTime < door.lastOpen) && door.isOpen)
+  if ((door.lastOpen + DOOR_OPEN_TIME > currentTime || currentTime < door.lastOpen) && door.isOpen) // ANA é quando a porta vai fechar?
   {
     door.close();
   }
