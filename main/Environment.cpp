@@ -1,17 +1,15 @@
 #include "Environment.h"
 
+
 EnvironmentStatus Environment::evaluate(float temp, float hum)
 {
-    // TODO Implement environment evaluation method
-    if(temp <= 20 && hum <= 50) {
-        EnvironmentStatus = CONFORMANT;
-    } 
-    else if (temp>20 && temp <= 23 && hum <=70 )
-    {
-        EnvironmentStatus = IRREGULAR;
-    }
-    else {
-        EnvironmentStatus = DANGER;
+    if(temp > DANGER_TEMP_THRESHOLD || hum > DANGER_HUM_THRESHOLD){
+        return EnvironmentStatus::DANGER;
     }
 
+    if(temp > IRREGULAR_TEMP_THRESHOLD || hum > IRREGULAR_HUM_THRESHOLD){
+        return EnvironmentStatus::IRREGULAR;
+    }
+
+    return EnvironmentStatus::CONFORMANT;
 }
