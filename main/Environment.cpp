@@ -3,6 +3,15 @@
 EnvironmentStatus Environment::evaluate(float temp, float hum)
 {
     // TODO Implement environment evaluation method
-    // ! remember that temp and hum can be NaN values
-    return EnvironmentStatus::CONFORMANT; //default return, change when implementing
+    if(temp <= 20 && hum <= 50) {
+        EnvironmentStatus = CONFORMANT;
+    } 
+    else if (temp>20 && temp <= 23 && hum <=70 )
+    {
+        EnvironmentStatus = IRREGULAR;
+    }
+    else {
+        EnvironmentStatus = DANGER;
+    }
+
 }
