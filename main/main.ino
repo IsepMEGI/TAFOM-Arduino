@@ -45,7 +45,7 @@ ScreenInterface interface(16, 2); // 16x2 Screen
 #else
 SerialInterface interface();
 #endif
-Repository repository;     // o que é que isto precisa? serve para guardar os dados excel
+Repository repository;
 Ventilator ventilator(DC_MOTOR_SPEED_PIN, DC_MOTOR_DIR_A_PIN, DC_MOTOR_DIR_B_PIN);
 LightInterface lightInterface(LIGHT_PIN);
 
@@ -57,6 +57,7 @@ void setup()
   Serial.begin(9600);
   interface.setup();
   ventilator.setup();
+  repository.setup();
 }
 
 void loop()
