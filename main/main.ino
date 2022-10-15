@@ -23,7 +23,9 @@
 #define DC_MOTOR_DIR_A_PIN 3
 #define DC_MOTOR_DIR_B_PIN 4
 #define RFID_PIN 6
-#define LIGHT_PIN 7
+#define LIGHT_GREEN_PIN 7
+#define LIGHT_YELLOW_PIN 8
+#define LIGHT_RED_PIN 9
 #define VALID_CREDENTIALS "password1234"
 
 // Auxiliary variables
@@ -47,7 +49,7 @@ SerialInterface interface();
 #endif
 Repository repository;
 Ventilator ventilator(DC_MOTOR_SPEED_PIN, DC_MOTOR_DIR_A_PIN, DC_MOTOR_DIR_B_PIN);
-LightInterface lightInterface(LIGHT_PIN);
+LightInterface lightInterface(LIGHT_GREEN_PIN, LIGHT_YELLOW_PIN, LIGHT_RED_PIN);
 
 float temperature;
 float humidity;

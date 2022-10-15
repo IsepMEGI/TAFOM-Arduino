@@ -1,37 +1,49 @@
 #include "LightInterface.h"
 
 
-LightInterface::LightInterface(uint8_t pin)
+LightInterface::LightInterface(uint8_t pinGreen, uint8_t pinYellow, uint8_t pinRed)
 {
-    this->pin = pin;
+    this->pinGreen = pinGreen;
+    this->pinYellow = pinYellow;
+    this->pinRed = pinRed;
 }
 
-void setup() {
+void LightInterface::setup() {
    // Leds ligadas aos pinos 7, 8,9
-   pinMode(7, OUTPUT); // Verde
-   pinMode(8, OUTPUT); // Amarelo
-   pinMode(9, OUTPUT); // Vermelho
+   pinMode(this->pinGreen, OUTPUT); // Verde
+   pinMode(this->pinYellow, OUTPUT); // Amarelo
+   pinMode(this->pinRed, OUTPUT); // Vermelho
 }
 
 void LightInterface::set(LightColor color)
 {
-
-
-    if(temp > DANGER_TEMP_THRESHOLD || hum > DANGER_HUM_THRESHOLD){
-        digitalWrite[7,HIGH];
-        digitalWrite[8,LOW]
-        digitalWrite[9,LOW]
+    if (color == this->currentColor)
+    {
+        return;
     }
 
-    if(temp > IRREGULAR_TEMP_THRESHOLD || hum > IRREGULAR_HUM_THRESHOLD){
-        digitalWrite[7,LOW];
-        digitalWrite[8,HIGH]
-        digitalWrite[9,LOW]
+    switch (color)
+    {
+    case LightColor::GREEN:
+        digitalWrite(pinGreen,HIGH);
+        digitalWrite(pinYellow,LOW);
+        digitalWrite(pinRed,LOW);
+        break;
+    case LightColor::YELLOW:
+        digitalWrite(pinYellow,HIGH);
+        digitalWrite(pinGreen,LOW);
+        digitalWrite(pinRed,LOW);
+        break;
+    case LightColor::RED:
+        digitalWrite(pinGreen,LOW);
+        digitalWrite(pinYellow,LOW);
+        digitalWrite(pinRed,HIGH);
+        break;
+    default:
+        digitalWrite(pinGreen,HIGH);
+        digitalWrite(pinYellow,LOW);
+        digitalWrite(pinRed,LOW);
+        break;
     }
-    return digitalWrite[7,LOW];
-        digitalWrite[8,LOW]
-        digitalWrite[9,HIGH]
-
-
-    
+    this->currentColor = color;
 }
