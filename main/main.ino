@@ -1,4 +1,3 @@
-
 #include "RFID.h"
 #include "Door.h"
 #include "ScreenInterface.h"
@@ -58,11 +57,7 @@ void setup()
 {
   Serial.begin(9600);
   interface.setup();
-<<<<<<< HEAD
-  
-=======
   ventilator.setup();
->>>>>>> b209b71bcc92ab2f1031e840733bd76a1bc40040
 }
 
 void loop()

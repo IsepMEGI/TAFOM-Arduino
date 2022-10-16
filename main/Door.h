@@ -2,11 +2,7 @@
 #define DOOR_H
 
 #include <stdint.h>
-<<<<<<< HEAD
-// include <servo>?? 
-=======
 #include <Servo.h>
->>>>>>> b209b71bcc92ab2f1031e840733bd76a1bc40040
 
 class Door
 {
