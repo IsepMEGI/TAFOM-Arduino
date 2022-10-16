@@ -16,11 +16,14 @@
 #define DHTTYPE DHT11 // DHT 11
 
 #define DOOR_OPEN_TIME 3000 // milliseconds
+#define DHT_SENSOR_COOLDOWN 2000
 
 // TODO Decide pin layout
 #define SERVO_PIN 3
 #define SCREEN_PIN 4
-#define DC_MOTOR_PIN 5
+#define DC_MOTOR_SPEED_PIN 5
+#define DC_MOTOR_DIR_A_PIN 3
+#define DC_MOTOR_DIR_B_PIN 4
 #define RFID_PIN 6
 #define LIGHT_PIN 7
 #define VALID_CREDENTIALS "password1234"
@@ -28,6 +31,7 @@
 // Auxiliary variables
 static int entryCounter = 0;
 static unsigned long currentTime;
+static unsigned long lastRead = 0;
 static String cardInfo;
 static EnvironmentStatus environmentStatus;
 static VentilatorSpeed ventilatorSpeed;
@@ -44,7 +48,7 @@ ScreenInterface interface(16, 2); // 16x2 Screen
 SerialInterface interface();
 #endif
 Repository repository;     // o que é que isto precisa? serve para guardar os dados excel
-Ventilator ventilator(DC_MOTOR_PIN);
+Ventilator ventilator(DC_MOTOR_SPEED_PIN, DC_MOTOR_DIR_A_PIN, DC_MOTOR_DIR_B_PIN);
 LightInterface lightInterface(LIGHT_PIN);
 
 float temperature;
@@ -54,7 +58,11 @@ void setup()
 {
   Serial.begin(9600);
   interface.setup();
+<<<<<<< HEAD
   
+=======
+  ventilator.setup();
+>>>>>>> b209b71bcc92ab2f1031e840733bd76a1bc40040
 }
 
 void loop()
@@ -81,8 +89,14 @@ void loop()
   // --- End handle door
 
   // --- Handle sensor
-  temperature = tempHumSensor.readTemperature();
-  humidity = tempHumSensor.readHumidity();
+  // If the sensor is doing its first measurement or
+  // it's passed more time than cooldown, it will measure again
+  if (lastRead == 0 || currentTime > lastRead + DHT_SENSOR_COOLDOWN || currentTime < lastRead)
+  {
+    temperature = tempHumSensor.readTemperature();
+    humidity = tempHumSensor.readHumidity();
+    lastRead = currentTime;
+  }
   // ---
 
   // --- Handle ventilator
