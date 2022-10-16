@@ -1,9 +1,10 @@
 #include "Repository.h"
 
-Repository::Repository(){
-    // implement...
+void Repository::setup(){
+    Serial.println("CLEARDATA");
+    Serial.println("LABEL,Time,Temperature,Humidity");
 }
 
 void Repository::save(float temperature, float humidity){
-    // implement...
+    Serial.println( (String) "DATA,TIME," + "," + temperature + "," + humidity);
 }
