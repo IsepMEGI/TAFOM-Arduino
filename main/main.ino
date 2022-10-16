@@ -61,6 +61,7 @@ void setup()
   interface.setup();
   ventilator.setup();
   repository.setup();
+  Door.setup();
 }
 
 void loop()
