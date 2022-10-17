@@ -9,6 +9,7 @@ RFID::RFID(uint8_t pinSlaveSelect, uint8_t pinReset)
 void RFID::setup()
 {
     this->mfrc522 = MFRC522(pinSlaveSelect, pinReset);
+    SPI.begin();
     this->mfrc522.PCD_Init();
 }
 

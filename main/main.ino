@@ -29,7 +29,8 @@
 #define LIGHT_GREEN_PIN 7
 #define LIGHT_YELLOW_PIN 8
 #define LIGHT_RED_PIN 9
-#define VALID_ID "1234"
+
+String validCardIDs[2] = {"E2A83F1B", "D570A53"}
 
 // Auxiliary variables
 static int entryCounter = 0;
@@ -57,6 +58,23 @@ LightInterface lightInterface(LIGHT_GREEN_PIN, LIGHT_YELLOW_PIN, LIGHT_RED_PIN);
 float temperature;
 float humidity;
 
+bool contains(String element, String *array)
+{
+  if (array == NULL)
+  {
+    return false;
+  }
+
+  for (size_t i = 0; i < sizeof(array)/sizeof(array[0]); i++)
+  {
+    if (element == array[i])
+    {
+      return true;
+    }
+  }
+  return false;
+}
+
 void setup()
 {
   Serial.begin(9600);
@@ -75,7 +93,7 @@ void loop()
   if (rfid.checkCard() == true)
   {
     cardID = rfid.ID;
-    if (cardID == VALID_ID && !door.isOpen()) // ANA credenciais validas e porta fechada, abre a porta
+    if (contains(cardID, validCardIDs) && !door.isOpen()) // ANA credenciais validas e porta fechada, abre a porta
     {
       door.open();
       entryCounter++; // ANA conta as pessoas que entram
