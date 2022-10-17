@@ -7,8 +7,6 @@
 #include "SerialInterface.h"
 #include "Environment.h"
 #include "LightInterface.h"
-#include <SPI.h>
-#include <MFRC522.h>
 
 
 // DHT Setup
@@ -19,6 +17,7 @@
 #define DOOR_OPEN_TIME 3000 // milliseconds
 #define DHT_SENSOR_COOLDOWN 2000
 
+<<<<<<< HEAD
 //RFID Setup
 #define RST_PIN 9
 #define SS_PIN 10
@@ -33,6 +32,14 @@
 #define LIGHT_GREEN_PIN 7
 #define LIGHT_YELLOW_PIN 8
 #define LIGHT_RED_PIN 9
+=======
+// TODO Decide pin layout
+#define SERVO_PIN 3
+#define SCREEN_PIN 4
+#define DC_MOTOR_PIN 5
+#define RFID_PIN 6
+#define LIGHT_PIN 7
+>>>>>>> parent of 176df59 (Import mfrc522)
 #define VALID_CREDENTIALS "password1234"
 
 // Auxiliary variables
@@ -46,6 +53,7 @@ static LightColor lightColor;
 
 // System objects
 DHT tempHumSensor(DHTPIN, DHTTYPE);
+RFID rfid(RFID_PIN);
 Door door(SERVO_PIN);
 RFIDMF mfrc522(SS_PIN, RST_PIN); 
 // change true to false to use Serial interface instead of Screen
@@ -65,6 +73,7 @@ void setup()
 {
   Serial.begin(9600);
   interface.setup();
+<<<<<<< HEAD
   ventilator.setup();
   repository.setup();
   Door.setup();
@@ -73,6 +82,8 @@ void setup()
 	delay(4);
 	RFIDMF.PCD_DumpVersionToSerial();	// Show details of PCD - MFRC522 Card Reader details
 	Serial.println(F("Scan PICC to see UID, SAK, type, and data blocks..."));
+=======
+>>>>>>> parent of 176df59 (Import mfrc522)
 }
 
 void loop()
@@ -91,7 +102,12 @@ void loop()
 	RFIDMF.PICC_DumpToSerial(&(RFIDMF.uid));
 
   // --- Handle door
+<<<<<<< HEAD
   /*if (rfid.checkCard(CARD_ID) == true)
+=======
+  // TODO change cardInfo to ID, because we just need to check for the ID and not for any other credentials
+  if (rfid.checkCard() == true)
+>>>>>>> parent of 176df59 (Import mfrc522)
   {
     cardInfo = rfid.cardInfo;
     if (cardInfo == VALID_CREDENTIALS && !door.isOpen) // ANA credenciais validas e porta fechada, abre a porta
