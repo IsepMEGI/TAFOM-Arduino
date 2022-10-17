@@ -6,11 +6,16 @@
 #include "SerialInterface.h"
 #include "Environment.h"
 #include "LightInterface.h"
+#include "RFID.h"
 
 // DHT Setup
 #include "DHT.h"
 #define DHTPIN 2      // Digital pin connected to the DHT sensor
 #define DHTTYPE DHT11 // DHT 11
+
+// MFRC Setup
+#define SS_PIN 10 //slave select pin
+#define RST_PIN 5 // reset pin. we need to study the pin layout
 
 #define DOOR_OPEN_TIME 3000 // milliseconds, must be greater than openning time: 20*90 ms
 #define DHT_SENSOR_COOLDOWN 2000
@@ -24,20 +29,20 @@
 #define LIGHT_GREEN_PIN 7
 #define LIGHT_YELLOW_PIN 8
 #define LIGHT_RED_PIN 9
-#define VALID_CREDENTIALS "password1234"
+#define VALID_ID "1234"
 
 // Auxiliary variables
 static int entryCounter = 0;
 static unsigned long currentTime;
 static unsigned long lastRead = 0;
-static String cardInfo;
+static String cardID;
 static EnvironmentStatus environmentStatus;
 static VentilatorSpeed ventilatorSpeed;
 static LightColor lightColor;
 
 // System objects
 DHT tempHumSensor(DHTPIN, DHTTYPE);
-RFID rfid(RFID_PIN);
+RFID rfid(SS_PIN, RST_PIN);
 Door door(SERVO_PIN);
 // change true to false to use Serial interface instead of Screen
 #if true
@@ -61,6 +66,7 @@ void setup()
   ventilator.setup();
   repository.setup();
   door.setup();
+  rfid.setup();
 }
 
 void loop()
@@ -68,8 +74,8 @@ void loop()
   // --- Handle door
   if (rfid.checkCard() == true)
   {
-    cardInfo = rfid.cardInfo;
-    if (cardInfo == VALID_CREDENTIALS && !door.isOpen()) // ANA credenciais validas e porta fechada, abre a porta
+    cardID = rfid.ID;
+    if (cardID == VALID_ID && !door.isOpen()) // ANA credenciais validas e porta fechada, abre a porta
     {
       door.open();
       entryCounter++; // ANA conta as pessoas que entram

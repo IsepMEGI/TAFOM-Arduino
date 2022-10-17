@@ -3,14 +3,20 @@
 
 #include <Arduino.h>
 #include <stdint.h>
+#include <MFRC522.h>
+#include <SPI.h>
+
 
 class RFID
 {
 private:
-    uint8_t pin;
+    uint8_t pinSlaveSelect;
+    uint8_t pinReset;
+    MFRC522 mfrc522;
 public:
-    String cardInfo;
-    RFID(uint8_t pin);
+    String ID;
+    RFID(uint8_t pinSlaveSelect, uint8_t pinReset);
+    void setup();
     bool checkCard();
 };
 
