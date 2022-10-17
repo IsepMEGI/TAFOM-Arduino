@@ -1,4 +1,3 @@
-#include "RFID.h"
 #include "Door.h"
 #include "ScreenInterface.h"
 #include "Interface.h"
@@ -29,11 +28,10 @@
 #define DC_MOTOR_SPEED_PIN 5
 #define DC_MOTOR_DIR_A_PIN 3
 #define DC_MOTOR_DIR_B_PIN 4
-#define RFID_PIN 6
 #define LIGHT_GREEN_PIN 7
 #define LIGHT_YELLOW_PIN 8
 #define LIGHT_RED_PIN 9
-#define VALID_CREDENTIALS "password1234"
+
 
 // Auxiliary variables
 static int entryCounter = 0;
