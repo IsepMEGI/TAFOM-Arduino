@@ -29,7 +29,7 @@
 #define LIGHT_GREEN_PIN 7
 #define LIGHT_YELLOW_PIN 8
 #define LIGHT_RED_PIN 9
-#define VALID_ID "33 98 34 56"
+#define VALID_ID "1234"
 
 // Auxiliary variables
 static int entryCounter = 0;
@@ -74,8 +74,8 @@ void loop()
   // --- Handle door
   if (rfid.checkCard() == true)
   {
-    //cardID = rfid.ID; //Probably this line is useless, we can text rfid.ID == VALID_ID direcly in the if condition
-    if (rfid.ID == VALID_ID && !door.isOpen()) // ANA credenciais validas e porta fechada, abre a porta
+    cardID = rfid.ID;
+    if (cardID == VALID_ID && !door.isOpen()) // ANA credenciais validas e porta fechada, abre a porta
     {
       door.open();
       entryCounter++; // ANA conta as pessoas que entram

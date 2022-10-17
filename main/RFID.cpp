@@ -23,18 +23,14 @@ bool RFID::checkCard()
     { // Since a PICC placed get Serial and continue
         return false;
     }
-
-    /*String tagID = "";
-    for ( uint8_t i = 0; i < mfrc522.uid.size; i++) 
-    { // I've change with mfrc522.uid.size just to be sure that the code works with different type of rfid tag identifier
-    //readCard[i] = mfrc522.uid.uidByte[i];
-    tagID.concat(String(mfrc522.uid.uidByte[i], HEX)); // Transfoming the bytes of the ID into String object and then join them together
+    String tagID = "";
+    for (uint8_t i = 0; i < 4; i++)
+    { // The MIFARE PICCs that we use have 4 byte UID
+        // readCard[i] = mfrc522.uid.uidByte[i];
+        tagID.concat(String(this->mfrc522.uid.uidByte[i], HEX)); // Adds the 4 bytes in a single String variable
     }
-    tagID.toUpperCase(); //This method transfom a String object in the same string but every letters is in CAPSLOCK
-    this->ID = tagID; */
-    String fakeID = "33 98 34 56";
-    this->ID = fakeID;
-
+    tagID.toUpperCase();
+    this->ID = tagID;
     this->mfrc522.PICC_HaltA(); // Stop reading
     return true;
 }
