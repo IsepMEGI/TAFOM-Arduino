@@ -9,6 +9,7 @@ Door::Door(uint8_t pin) // funçao que se chama door e tem variavel PIN é a fun
 
 void Door::setup()
 {
+    this->servo = Servo();
     this->servo.attach(this->pin); // Associar o objeto this->servo ao pin de controlo
     this->servo.write(0); // posição inicial da porta
     delay(20 * 180);
