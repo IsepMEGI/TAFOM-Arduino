@@ -7,6 +7,8 @@
 #include "SerialInterface.h"
 #include "Environment.h"
 #include "LightInterface.h"
+#include <SPI.h>
+#include <MFRC522.h>
 
 // DHT Setup
 #include "DHT.h"
@@ -15,13 +17,19 @@
 
 #define DOOR_OPEN_TIME 3000 // milliseconds
 
+//RFID Setup
+#define RST_PIN 9
+#define SS_PIN 10
+RFIDMF mfrc522(SS_PIN, RST_PIN); 
+
 // TODO Decide pin layout
 #define SERVO_PIN 3
 #define SCREEN_PIN 4
 #define DC_MOTOR_PIN 5
-#define RFID_PIN 6
+#define RFID_PIN1 9
+#define RFID_PIN2 10
 #define LIGHT_PIN 7
-#define VALID_CREDENTIALS "password1234"
+#define CARD_ID 12345
 
 // Auxiliary variables
 static int entryCounter = 0;
@@ -33,7 +41,6 @@ static LightColor lightColor;
 
 // System objects
 DHT tempHumSensor(DHTPIN, DHTTYPE);
-RFID rfid(RFID_PIN);
 Door door(SERVO_PIN);
 // change true to false to use Serial interface instead of Screen
 #if true
@@ -52,14 +59,19 @@ void setup()
 {
   Serial.begin(9600);
   interface.setup();
+	while (!Serial);		// Do nothing if no serial port is opened (added for Arduinos based on ATMEGA32U4)
+	SPI.begin();			// Init SPI bus
+	mfrc522.PCD_Init();		// Init MFRC522
+	delay(4);				// Optional delay. Some board do need more time after init to be ready, see Readme
+	mfrc522.PCD_DumpVersionToSerial();	// Show details of PCD - MFRC522 Card Reader details
+	Serial.println(F("Scan PICC to see UID, SAK, type, and data blocks..."));
 }
 
 void loop()
 {
 
   // --- Handle door
-  // TODO change cardInfo to ID, because we just need to check for the ID and not for any other credentials
-  if (rfid.checkCard() == true)
+  if (rfid.checkCard(CARD_ID) == true)
   {
     cardInfo = rfid.cardInfo;
     if (cardInfo == VALID_CREDENTIALS && !door.isOpen)
