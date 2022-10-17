@@ -1,7 +1,7 @@
 #ifndef DOOR_H
 #define DOOR_H
-
 #include <stdint.h>
+#include <Servo.h>
 
 class Door
 {

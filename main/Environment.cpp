@@ -1,8 +1,15 @@
 #include "Environment.h"
 
+
 EnvironmentStatus Environment::evaluate(float temp, float hum)
 {
-    // TODO Implement environment evaluation method
-    // ! remember that temp and hum can be NaN values
-    return EnvironmentStatus::CONFORMANT; //default return, change when implementing
+    if(temp > DANGER_TEMP_THRESHOLD || hum > DANGER_HUM_THRESHOLD){
+        return EnvironmentStatus::DANGER;
+    }
+
+    if(temp > IRREGULAR_TEMP_THRESHOLD || hum > IRREGULAR_HUM_THRESHOLD){
+        return EnvironmentStatus::IRREGULAR;
+    }
+
+    return EnvironmentStatus::CONFORMANT;
 }
