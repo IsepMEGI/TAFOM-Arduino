@@ -1,4 +1,3 @@
-#include "RFID.h"
 #include "Door.h"
 #include "ScreenInterface.h"
 #include "Interface.h"
@@ -8,19 +7,13 @@
 #include "Environment.h"
 #include "LightInterface.h"
 
-
 // DHT Setup
 #include "DHT.h"
 #define DHTPIN 2      // Digital pin connected to the DHT sensor
 #define DHTTYPE DHT11 // DHT 11
 
-#define DOOR_OPEN_TIME 3000 // milliseconds
+#define DOOR_OPEN_TIME 3000 // milliseconds, must be greater than openning time: 20*90 ms
 #define DHT_SENSOR_COOLDOWN 2000
-
-<<<<<<< HEAD
-//RFID Setup
-#define RST_PIN 9
-#define SS_PIN 10
 
 // TODO Decide pin layout
 #define SERVO_PIN 3
@@ -28,18 +21,9 @@
 #define DC_MOTOR_SPEED_PIN 5
 #define DC_MOTOR_DIR_A_PIN 3
 #define DC_MOTOR_DIR_B_PIN 4
-#define RFID_PIN 6
 #define LIGHT_GREEN_PIN 7
 #define LIGHT_YELLOW_PIN 8
 #define LIGHT_RED_PIN 9
-=======
-// TODO Decide pin layout
-#define SERVO_PIN 3
-#define SCREEN_PIN 4
-#define DC_MOTOR_PIN 5
-#define RFID_PIN 6
-#define LIGHT_PIN 7
->>>>>>> parent of 176df59 (Import mfrc522)
 #define VALID_CREDENTIALS "password1234"
 
 // Auxiliary variables
@@ -55,7 +39,6 @@ static LightColor lightColor;
 DHT tempHumSensor(DHTPIN, DHTTYPE);
 RFID rfid(RFID_PIN);
 Door door(SERVO_PIN);
-RFIDMF mfrc522(SS_PIN, RST_PIN); 
 // change true to false to use Serial interface instead of Screen
 #if true
 ScreenInterface interface(16, 2); // 16x2 Screen
@@ -72,54 +55,30 @@ float humidity;
 void setup()
 {
   Serial.begin(9600);
+
+  // System objects' setup
   interface.setup();
-<<<<<<< HEAD
   ventilator.setup();
   repository.setup();
-  Door.setup();
-  SPI.begin();
-  RFIDMF.PCD_Init();		// Init MFRC522
-	delay(4);
-	RFIDMF.PCD_DumpVersionToSerial();	// Show details of PCD - MFRC522 Card Reader details
-	Serial.println(F("Scan PICC to see UID, SAK, type, and data blocks..."));
-=======
->>>>>>> parent of 176df59 (Import mfrc522)
+  door.setup();
 }
 
 void loop()
 {
-  	// Reset the loop if no new card present on the sensor/reader. This saves the entire process when idle.
-	if ( ! RFIDMF.PICC_IsNewCardPresent()) {
-		return;
-	}
-
-	// Select one of the cards
-	if ( ! RFIDMF.PICC_ReadCardSerial()) {
-		return;
-	}
-
-	// Dump debug info about the card; PICC_HaltA() is automatically called
-	RFIDMF.PICC_DumpToSerial(&(RFIDMF.uid));
-
   // --- Handle door
-<<<<<<< HEAD
-  /*if (rfid.checkCard(CARD_ID) == true)
-=======
-  // TODO change cardInfo to ID, because we just need to check for the ID and not for any other credentials
   if (rfid.checkCard() == true)
->>>>>>> parent of 176df59 (Import mfrc522)
   {
     cardInfo = rfid.cardInfo;
-    if (cardInfo == VALID_CREDENTIALS && !door.isOpen) // ANA credenciais validas e porta fechada, abre a porta
+    if (cardInfo == VALID_CREDENTIALS && !door.isOpen()) // ANA credenciais validas e porta fechada, abre a porta
     {
       door.open();
-      entryCounter++; //ANA conta as pessoas que entram
+      entryCounter++; // ANA conta as pessoas que entram
     }
-  }*/
+  }
 
-  currentTime = millis(); 
+  currentTime = millis();
 
-  if ((door.lastOpen + DOOR_OPEN_TIME > currentTime || currentTime < door.lastOpen) && door.isOpen) // ANA é quando a porta vai fechar?
+  if ((door.lastOpen + DOOR_OPEN_TIME > currentTime || currentTime < door.lastOpen) && door.isOpen()) // ANA é quando a porta vai fechar?
   {
     door.close();
   }
@@ -161,11 +120,9 @@ void loop()
   ventilator.run(ventilatorSpeed);
   // --- End handle ventilator
 
-
   // --- Handle interfaces
   interface.display(temperature, humidity, entryCounter);
   // ---
-
 
   // --- Handle saving data
   repository.save(temperature, humidity);

@@ -1,36 +1,41 @@
 #include "Door.h"
-Servo servo; // criar um objeto servo 
-int angle= 0; // posição inicial da porta
+Servo servo; // criar um objeto servo
 
 // TODO Implement door opening and closing
 
 Door::Door(uint8_t pin) // funçao que se chama door e tem variavel PIN é a funçao door servo pin.
 {
-    this->pin = pin; 
-  
+    this->pin = pin;
 }
 
-void Door::setup(){
-servo.attach(SERVO_PIN); // Associar o objeto servo ao pin de controlo
+void Door::setup()
+{
+    servo.attach(this->pin); // Associar o objeto servo ao pin de controlo
+    servo.write(0); // posição inicial da porta
+    delay(20 * 180);
 }
 
 void Door::open()
 {
-    // Implement door opening method
-   for(angle = 0; angle < 90; angle++) // abre 90 ou 180?
-  {
-        servo.write(angle); // update do servo para o angulo em especifico
-        delay(20); // Tempo que demora a mover um grau
-  } 
+    //delay(20);  Tempo que demora a mover um grau
+
+    if (servo.read() == 0)
+    {
+        servo.write(90);
+        this->lastOpen = millis();
+    }
 
 }
 
 void Door::close()
 {
-    // Implement door closing method 
-    for(angle = 90; angle > 0; angle--) 
+    if (servo.read() == 90)
     {
-        servo.write(angle);
-        delay(20); 
+        servo.write(0);
     }
+}
+
+bool Door::isOpen()
+{
+    return servo.read() == 90;
 }
