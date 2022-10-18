@@ -30,7 +30,7 @@
 #define LIGHT_YELLOW_PIN 8
 #define LIGHT_RED_PIN 9
 
-String validCardIDs[2] = {"E2A83F1B", "D570A53"}
+String validCardIDs[2] = {"E2A83F1B", "D570A53"};
 
 // Auxiliary variables
 static int entryCounter = 0;
@@ -97,6 +97,9 @@ void loop()
     {
       door.open();
       entryCounter++; // ANA conta as pessoas que entram
+
+      // Refresh interface
+      interface.display(temperature, humidity, entryCounter);
     }
   }
 
@@ -116,6 +119,10 @@ void loop()
     temperature = tempHumSensor.readTemperature();
     humidity = tempHumSensor.readHumidity();
     lastRead = currentTime;
+
+    // Save data and refresh interface
+    repository.save(temperature, humidity);
+    interface.display(temperature, humidity, entryCounter);
   }
   // ---
 
@@ -144,11 +151,4 @@ void loop()
   ventilator.run(ventilatorSpeed);
   // --- End handle ventilator
 
-  // --- Handle interfaces
-  interface.display(temperature, humidity, entryCounter);
-  // ---
-
-  // --- Handle saving data
-  repository.save(temperature, humidity);
-  // ---
 }
