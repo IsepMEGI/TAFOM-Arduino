@@ -139,7 +139,7 @@ void loop()
     // Save data and refresh interface
     if (!isnan(temperature) && !isnan(humidity))
     {
-      //repository.save(temperature, humidity);
+      repository.save(temperature, humidity);
       interface.display(temperature, humidity, entryCounter);
     }
     
