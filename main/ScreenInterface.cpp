@@ -9,7 +9,37 @@ ScreenInterface::ScreenInterface(uint8_t rows, uint8_t cols){
 
 void ScreenInterface::setup()
 {
-    this->screen = new LiquidCrystal_I2C(I2C_ADDRESS, this->cols, this->rows);
+    Wire.begin();
+    byte error, address, screenAddress;
+    int Devices;
+    spl("Scanning...");
+    Devices = 0;
+    for(address = 1; address < 127; address++ )
+    {
+        Wire.beginTransmission(address);
+        error = Wire.endTransmission();
+        if (error == 0)
+        {
+            sp("I2C device found at address 0x");
+            if (address<16)
+                sp("0");
+            sp(address);
+            spl("  !");
+            Devices++;
+            screenAddress = address;
+        }
+        else if (error==4)
+        {
+            sp("Unknown error at address 0x");
+            if (address<16)
+                sp("0");
+            spl(address)
+        }
+    }
+    if (Devices == 0)
+        spl("No I2C devices found\n");
+
+    this->screen = new LiquidCrystal_I2C(screenAddress, this->cols, this->rows);
     this->screen->init();
     this->screen->backlight();
 }

@@ -3,10 +3,10 @@
 
 #include <stdint.h>
 #include <LiquidCrystal_I2C.h>
+#include <Wire.h>
 
 #include "Interface.h"
-
-#define I2C_ADDRESS 63
+#include "Comment.h"
 
 class ScreenInterface: public Interface
 {

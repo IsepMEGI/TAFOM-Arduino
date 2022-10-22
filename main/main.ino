@@ -10,19 +10,18 @@
 
 // DHT Setup
 #include "DHT.h"
-#define DHTPIN 2      // Digital pin connected to the DHT sensor
+#define DHTPIN A1      // Digital pin connected to the DHT sensor
 #define DHTTYPE DHT11 // DHT 11
 
 // MFRC Setup
-#define SS_PIN 10 //slave select pin
-#define RST_PIN 5 // reset pin. we need to study the pin layout
+#define SS_PIN 53 //slave select pin
+#define RST_PIN 6 // reset pin. we need to study the pin layout
 
-#define DOOR_OPEN_TIME 3000 // milliseconds, must be greater than openning time: 20*90 ms
-#define DHT_SENSOR_COOLDOWN 2000
+#define DOOR_OPEN_TIME 5000 // milliseconds, must be greater than openning time: 20*90 ms
+#define DHT_SENSOR_COOLDOWN 3000
 
 // TODO Decide pin layout
-#define SERVO_PIN 3
-#define SCREEN_PIN 4
+#define SERVO_PIN 11
 #define DC_MOTOR_SPEED_PIN 5
 #define DC_MOTOR_DIR_A_PIN 3
 #define DC_MOTOR_DIR_B_PIN 4
@@ -55,19 +54,14 @@ Repository repository;
 Ventilator ventilator(DC_MOTOR_SPEED_PIN, DC_MOTOR_DIR_A_PIN, DC_MOTOR_DIR_B_PIN);
 LightInterface lightInterface(LIGHT_GREEN_PIN, LIGHT_YELLOW_PIN, LIGHT_RED_PIN);
 
-float temperature;
-float humidity;
+float temperature, temperatureAux;
+float humidity, humidityAux;
 
-bool contains(String element, String *array)
+bool validate(String element)
 {
-  if (array == NULL)
+  for (size_t i = 0; i < 2; i++)
   {
-    return false;
-  }
-
-  for (size_t i = 0; i < sizeof(array)/sizeof(array[0]); i++)
-  {
-    if (element == array[i])
+    if (element == validCardIDs[i])
     {
       return true;
     }
@@ -81,19 +75,37 @@ void setup()
 
   // System objects' setup
   interface.setup();
+  spl("interface setup");
   ventilator.setup();
+  spl("ventilator setup");
   repository.setup();
+  spl("repoitory setup");
   door.setup();
+  spl("door setup");
   rfid.setup();
+  spl("rfid setup");
+  tempHumSensor.begin();
+  spl("sensor setup");
 }
 
 void loop()
 {
   // --- Handle door
+  currentTime = millis();
+
+  if ((door.lastOpen + DOOR_OPEN_TIME < currentTime || currentTime < door.lastOpen) && door.isOpen()) // ANA é quando a porta vai fechar?
+  {
+    door.close();
+  }
+
   if (rfid.checkCard() == true)
   {
     cardID = rfid.ID;
-    if (contains(cardID, validCardIDs) && !door.isOpen()) // ANA credenciais validas e porta fechada, abre a porta
+    sp("is door open? ");
+    spl(door.isOpen());
+    sp("valid id?");
+    spl(validate(cardID));
+    if (validate(cardID) && !door.isOpen()) // ANA credenciais validas e porta fechada, abre a porta
     {
       door.open();
       entryCounter++; // ANA conta as pessoas que entram
@@ -103,12 +115,6 @@ void loop()
     }
   }
 
-  currentTime = millis();
-
-  if ((door.lastOpen + DOOR_OPEN_TIME > currentTime || currentTime < door.lastOpen) && door.isOpen()) // ANA é quando a porta vai fechar?
-  {
-    door.close();
-  }
   // --- End handle door
 
   // --- Handle sensor
@@ -116,13 +122,27 @@ void loop()
   // it's passed more time than cooldown, it will measure again
   if (lastRead == 0 || currentTime > lastRead + DHT_SENSOR_COOLDOWN || currentTime < lastRead)
   {
-    temperature = tempHumSensor.readTemperature();
-    humidity = tempHumSensor.readHumidity();
+    temperatureAux = tempHumSensor.readTemperature();
+    humidityAux = tempHumSensor.readHumidity();
+
+    if (!isnan(temperatureAux))
+    {
+      temperature = temperatureAux;
+    }
+    if (!isnan(humidityAux))
+    {
+      humidity = humidityAux;
+    }
+
     lastRead = currentTime;
 
     // Save data and refresh interface
-    repository.save(temperature, humidity);
-    interface.display(temperature, humidity, entryCounter);
+    if (!isnan(temperature) && !isnan(humidity))
+    {
+      //repository.save(temperature, humidity);
+      interface.display(temperature, humidity, entryCounter);
+    }
+    
   }
   // ---
 

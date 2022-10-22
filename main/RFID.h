@@ -5,7 +5,7 @@
 #include <stdint.h>
 #include <MFRC522.h>
 #include <SPI.h>
-
+#include "Comment.h"
 
 class RFID
 {
