@@ -91,12 +91,6 @@ void setup()
 void loop()
 {
   // --- Handle door
-  currentTime = millis();
-
-  if ((door.lastOpen + DOOR_OPEN_TIME < currentTime || currentTime < door.lastOpen) && door.isOpen()) // ANA é quando a porta vai fechar?
-  {
-    door.close();
-  }
 
   if (rfid.checkCard() == true)
   {
@@ -113,6 +107,12 @@ void loop()
       // Refresh interface
       interface.display(temperature, humidity, entryCounter);
     }
+  }
+  currentTime = millis();
+
+  if ((door.lastOpen + DOOR_OPEN_TIME < currentTime || currentTime < door.lastOpen) && door.isOpen()) // ANA é quando a porta vai fechar?
+  {
+    door.close();
   }
 
   // --- End handle door
