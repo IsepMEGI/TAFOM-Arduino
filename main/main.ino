@@ -21,13 +21,13 @@
 #define DHT_SENSOR_COOLDOWN 3000
 
 // TODO Decide pin layout
-#define SERVO_PIN 11
+#define SERVO_PIN A2
 #define DC_MOTOR_SPEED_PIN 5
 #define DC_MOTOR_DIR_A_PIN 3
 #define DC_MOTOR_DIR_B_PIN 4
-#define LIGHT_GREEN_PIN 7
+#define LIGHT_GREEN_PIN 9
 #define LIGHT_YELLOW_PIN 8
-#define LIGHT_RED_PIN 9
+#define LIGHT_RED_PIN 7
 
 String validCardIDs[2] = {"E2A83F1B", "D570A53"};
 
@@ -161,6 +161,7 @@ void loop()
   case EnvironmentStatus::DANGER:
     ventilatorSpeed = VentilatorSpeed::MAXIMUM;
     lightColor = LightColor::RED;
+    door.open();
     break;
   default:
     ventilatorSpeed = VentilatorSpeed::MINIMUM;
