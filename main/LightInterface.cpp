@@ -9,11 +9,11 @@ LightInterface::LightInterface(uint8_t pinGreen, uint8_t pinYellow, uint8_t pinR
 
 void LightInterface::setup()
 {
-    // Leds ligadas aos pinos 7, 8,9
-    pinMode(this->pinGreen, OUTPUT);  // Verde
-    pinMode(this->pinYellow, OUTPUT); // Amarelo
-    pinMode(this->pinRed, OUTPUT);    // Vermelho
-    // verde por defeito
+   
+    pinMode(this->pinGreen, OUTPUT); 
+    pinMode(this->pinYellow, OUTPUT);
+    pinMode(this->pinRed, OUTPUT);    
+    
     digitalWrite(pinGreen, HIGH);
     digitalWrite(pinYellow, LOW);
     digitalWrite(pinRed, LOW);

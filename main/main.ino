@@ -54,8 +54,8 @@ Repository repository;
 Ventilator ventilator(DC_MOTOR_SPEED_PIN, DC_MOTOR_DIR_A_PIN, DC_MOTOR_DIR_B_PIN);
 LightInterface lightInterface(LIGHT_GREEN_PIN, LIGHT_YELLOW_PIN, LIGHT_RED_PIN);
 
-float temperature, temperatureAux;
-float humidity, humidityAux;
+float temperature = 0.0, temperatureAux;
+float humidity = 0.0, humidityAux;
 
 bool validate(String element)
 {
@@ -75,17 +75,12 @@ void setup()
 
   // System objects' setup
   interface.setup();
-  spl("interface setup");
   ventilator.setup();
-  spl("ventilator setup");
   repository.setup();
-  spl("repoitory setup");
   door.setup();
-  spl("door setup");
   rfid.setup();
-  spl("rfid setup");
   tempHumSensor.begin();
-  spl("sensor setup");
+  lightInterface.setup();
 }
 
 void loop()
@@ -95,14 +90,11 @@ void loop()
   if (rfid.checkCard() == true)
   {
     cardID = rfid.ID;
-    sp("is door open? ");
-    spl(door.isOpen());
-    sp("valid id?");
-    spl(validate(cardID));
-    if (validate(cardID) && !door.isOpen()) // ANA credenciais validas e porta fechada, abre a porta
+    
+    if (validate(cardID) && !door.isOpen()) 
     {
       door.open();
-      entryCounter++; // ANA conta as pessoas que entram
+      entryCounter++;
 
       // Refresh interface
       interface.display(temperature, humidity, entryCounter);
@@ -110,7 +102,7 @@ void loop()
   }
   currentTime = millis();
 
-  if ((door.lastOpen + DOOR_OPEN_TIME < currentTime || currentTime < door.lastOpen) && door.isOpen()) // ANA é quando a porta vai fechar?
+  if ((door.lastOpen + DOOR_OPEN_TIME < currentTime || currentTime < door.lastOpen) && door.isOpen()) 
   {
     door.close();
   }
