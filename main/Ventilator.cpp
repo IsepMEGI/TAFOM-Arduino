@@ -26,16 +26,16 @@ void Ventilator::run(VentilatorSpeed speed){
     
     switch (speed) {
     case VentilatorSpeed::MINIMUM:
-        analogWrite(this->pinSpeed,70);
+        analogWrite(this->pinSpeed,90);
         break;
     case VentilatorSpeed::MEDIUM:
-        analogWrite(this->pinSpeed,90);
+        analogWrite(this->pinSpeed,150);
         break;
     case VentilatorSpeed::MAXIMUM:
         analogWrite(this->pinSpeed,200);
         break;
     default:
-        analogWrite(this->pinSpeed,60);
+        analogWrite(this->pinSpeed,90);
         break;
     }
     this->currentSpeed = speed;
