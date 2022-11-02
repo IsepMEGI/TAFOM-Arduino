@@ -6,5 +6,5 @@ void Repository::setup(){
 }
 
 void Repository::save(float temperature, float humidity){
-    Serial.println( (String) "DATA,TIME," + "," + temperature + "," + humidity);
+    Serial.println( (String) "DATA,TIME," + temperature + "," + humidity);
 }
